@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      width: 300px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    input {
+      padding: 10px;
+      width: 80%;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ffcc00;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffaa00;
+    }
+
+    .weather {
+      margin-top: 20px;
+    }
+
+    img {
+      width: 80px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🌤 Weather App</h2>
+
+    <input type="text" id="city" placeholder="Enter city name">
+    <br>
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div class="weather" id="weather"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("city").value || "London";
+
+      const apiKey = "3318d63e265b4b46895105610262103";
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const weatherHTML = `
+          <h3>${data.location.name}, ${data.location.country}</h3>
+          <img src="https:${data.current.condition.icon}" alt="icon">
+          <p><strong>${data.current.temp_c}°C</strong></p>
+          <p>${data.current.condition.text}</p>
+          <p>💨 Wind: ${data.current.wind_kph} kph</p>
+          <p>💧 Humidity: ${data.current.humidity}%</p>
+        `;
+
+        document.getElementById("weather").innerHTML = weatherHTML;
+
+      } catch (error) {
+        document.getElementById("weather").innerHTML = "❌ Error fetching data";
+      }
+    }
+  </script>
+
+</body>
+</html>
